@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="depth_camera_length" value="0.01" />
+    <xacro:property name="depth_camera_width" value="0.1" />
+    <xacro:property name="depth_camera_height" value="0.05" />
+
+    <link name="depth_camera_link">
+       <visual>
+            <geometry>
+                <box size="${depth_camera_length} ${depth_camera_width} ${depth_camera_height}" />
+            </geometry>
+            <material name="gray" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${depth_camera_length} ${depth_camera_width} ${depth_camera_height}" />
+            </geometry>
+        </collision> 
+        <xacro:box_inertia m="0.1" l="${depth_camera_length}" w="${depth_camera_width}" h="${depth_camera_height}" 
+                           xyz="0 0 0" rpy="0 0 0" />
+    </link>
+
+    <joint name="depth_camera_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="depth_camera_link" />
+        <origin xyz="${base_length / 2.0} 0 ${base_height / 2.0}" rpy="0 0 0"/>
+    </joint>
+    
+    
+
+
+    <gazebo reference="depth_camera_joint">
+        <sensor name="camera_depth" type="depth">
+            <pose>0 0 0 -1.57 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <camera>
+                <horizontal_fov>1.089</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>8</far>
+                </clip>
+            </camera>
+            <plugin name="kinect_camera_controller" filename="libgazebo_ros_camera.so">
+                <frameName>depth_camera_link</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
