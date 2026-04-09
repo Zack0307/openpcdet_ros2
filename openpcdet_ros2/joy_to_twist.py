@@ -15,23 +15,33 @@ class PS4Turtle(Node):
         super().__init__('ps4_turtle_ctrl')
         
         self.car = Rosmaster()
-        
+        # 啟動背景線程讀取串口數據
+        self.car.create_receive_threading()
         self.pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
         self.sub = self.create_subscription(Joy, '/joy', self.joy_callback, 10)
         self.servo_pub  =  self.create_publisher(Float32, '/Servo_angle', 10)
         self.esc_pub = self.create_publisher(Float32, '/ESC_speed', 10)
         self.EdiPublisher = self.create_publisher(Float32,"edition",100)
-        self.volPublisher = self.create_publisher(Float32,"voltage",100)
+        self.volPublisher = self.create_publisher(Float32,"/voltage",100)
         self.staPublisher = self.create_publisher(JointState,"joint_states",100)
         self.velPublisher = self.create_publisher(Twist,"vel_raw",50)
         self.imuPublisher = self.create_publisher(Imu,"/imu/data_raw",100)
         self.magPublisher = self.create_publisher(MagneticField,"/imu/mag",100)
+        self.timer = self.create_timer(0.005, self.pub_data)
+        self.vol_timer = self.create_timer(1.0, self.battery_voltage)
+
+        self.imu_link = "imu_link"
+        self.Prefix = " "
         
     def pub_data(self):
         time_stamp = Clock().now()
+
         imu = Imu()
+
         twist = Twist()
+
         battery = Float32()
+        
         edition = Float32()
         mag = MagneticField()
         state = JointState()
@@ -46,7 +56,7 @@ class PS4Turtle(Node):
         
         #print ("mag: ",self.car.get_magnetometer_data())       
         edition.data = self.car.get_version()*1.0
-        battery.data = self.car.get_battery_voltage()*1.0
+        # battery.data = self.car.get_battery_voltage()*1.0
         ax, ay, az = self.car.get_accelerometer_data()
         gx, gy, gz = self.car.get_gyroscope_data()
         mx, my, mz = self.car.get_magnetometer_data()
@@ -73,6 +83,8 @@ class PS4Turtle(Node):
         mag.magnetic_field.x = mx*1.0
         mag.magnetic_field.y = my*1.0
         mag.magnetic_field.z = mz*1.0
+
+        yaw,roll,pitch = self.car.get_imu_attitude_data()
         
         # 将小车当前的线速度和角速度发布出去
         # Publish the current linear vel and angular vel of the car
@@ -88,8 +100,19 @@ class PS4Turtle(Node):
         
         self.imuPublisher.publish(imu)
         self.magPublisher.publish(mag)
+        # self.get_logger().info(f'accelerometer_data:{ax:.2f},{ay:.2f},{az:.2f}')
+        # self.get_logger().info(f'Yaw Roll Pitch:{yaw:.2f},{roll:.2f},{pitch:.2f}')
+        # self.volPublisher.publish(battery)
+        # print(battery)
+
+    def battery_voltage(self):
+        battery = Float32()
+        battery.data = self.car.get_battery_voltage()*1.0
         self.volPublisher.publish(battery)
-        
+        # self.get_logger().info(f'voltage:{battery.data:.2f} V')
+        self.timer = self.create_timer(600.0, self.battery_voltage)
+
+
     def cmd_vel_callback(self,msg):
         # 小车运动控制，订阅者回调函数
         # Car motion control, subscriber callback function
@@ -131,8 +154,8 @@ class PS4Turtle(Node):
         
         self.car.set_pwm_servo(4,  angle)
         self.car.set_pwm_servo(3,  speed)
-        self.get_logger().info(f'cmd_vel ← lin: {twist.linear.x:.2f}, ang: {twist.angular.z:.2f}')
-        self.get_logger().info(f'speed:{speed}')
+        # self.get_logger().info(f'cmd_vel ← lin: {twist.linear.x:.2f}, ang: {twist.angular.z:.2f}')
+        # self.get_logger().info(f'speed:{speed}')
     
     def ps4_map_to_servo(self,  joy_value):
         angle = 90 + joy_value * 90
@@ -142,12 +165,13 @@ class PS4Turtle(Node):
         if abs(joy_data) < 0.1:
             speed = 90.0
         else:
-            speed  =  15 *(- joy_data)  +  90
+            speed  =  20 *(- joy_data)  +  90
         return speed 
 
 def main(args=None):
     rclpy.init(args=args)
     node = PS4Turtle()
+    # node.battery_voltage()
 
     # 定義安全關閉
     def shutdown_handler(sig, frame):
@@ -157,6 +181,9 @@ def main(args=None):
             node.car.set_car_motion(0.0, 0.0, 0.0)
             node.car.set_pwm_servo(3, 90)  # 停止 ESC
             node.car.set_pwm_servo(4, 90)  # 歸中舵機
+
+            #publish other data
+            # node.pub_data()
         except Exception as e:
             node.get_logger().warn(f"Error while stopping car: {e}")
         finally:

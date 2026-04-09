@@ -16,6 +16,7 @@ class Rosmaster(object):
         # com="/dev/ttyTHS1"
         # com="/dev/ttyUSB0"
         # com="/dev/ttyAMA0"
+        # com ="/dev/myserial"
 
         self.ser = serial.Serial(com, 115200)
 

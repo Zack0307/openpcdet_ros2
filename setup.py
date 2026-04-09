@@ -28,8 +28,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-             'ps4_turtle = turtlesim_test.joy_to_twist:main',
-            'ps4 = turtlesim_test.ps4:main'
+             'ps4_turtle = openpcdet_ros2.joy_to_twist:main',
+            'ps4 = openpcdet_ros2.ps4:main'
         ],
     },
 )
