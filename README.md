@@ -2,9 +2,8 @@
 
 ## 這是什麼
 
-這是一個 **ROS 2（ament_python 架構）套件**，名為 `openpcdet_ros2`。雖然套件名稱讓人聯想到 [OpenPCDet](https://github.com/open-mmlab/OpenPCDet)（一個 LiDAR 點雲 3D 物件偵測框架），但目前壓縮包裡的程式碼**還沒有包含任何點雲偵測或深度學習相關內容**。實際內容是一套**搭載 Yahboom Rosmaster 控制板的四輪/Ackermann 轉向小車**的 ROS 2 驅動與 PS4 搖桿遙控程式，外加 Gazebo 模擬用的機器人模型（URDF）與感測器（光達、相機、IMU）描述檔。
+這是一個 **ROS 2（ament_python 架構）套件**，名為 `openpcdet_ros2`。實際內容是一套**搭載 Yahboom Rosmaster 控制板的四輪/Ackermann 轉向小車**的 ROS 2 驅動與 PS4 搖桿遙控程式，外加 Gazebo 模擬用的機器人模型（URDF）與感測器（光達、相機、IMU）描述檔。
 
-可以理解為：這是該專案在加入點雲偵測功能之前，**先把機器人底盤、感測器、遙控與定位的基礎打好**的階段性版本，之後應該會把 OpenPCDet 的推論結果整合進來（例如訂閱光達點雲、輸出偵測框）。
 
 ## 主要功能
 
@@ -80,8 +79,3 @@ ros2 launch openpcdet_ros2 jetson.launch.py
 - `package.xml` 的 `<description>` 與 `<license>` 都還是預設的 `TODO`，尚未填寫。
 - `my_robot.urdf.xacro` 內的 `xacro:include` 路徑是寫死的絕對路徑（`/home/dllab/ros2_ws/...`），換到別的機器或別人的 workspace 會找不到檔案，需要改成用 `$(find openpcdet_ros2)` 或 `get_package_share_directory` 的方式動態取得路徑。
 - 啟動檔中光達、RViz、IMU 濾波、EKF 定位、`cartographer`（建圖）等節點都已寫好但被註解掉，要使用時需自行取消註解並確認對應套件已安裝。
-- 套件名稱暗示了與 OpenPCDet（點雲 3D 物件偵測）的整合，但目前程式碼中尚未看到任何點雲訂閱、推論或偵測框發布的邏輯，這部分應該是後續要加上去的功能。
-
----
-
-整體來說，這個套件目前的角色比較像是「**自走車的底層驅動 + 搖桿遙控 + 感測器/模擬基礎建設**」，是要做光達點雲物件偵測（OpenPCDet）整合的前置工程。
