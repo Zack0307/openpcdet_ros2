@@ -2,9 +2,8 @@
 
 ## 專案架構
 
-<img width="770" height="578" alt="image" src="https://github.com/user-attachments/assets/4d86f84d-8ab6-4ce5-9e4a-ab43e00e9711" />
+<img width="1024" height="768" alt="construction" src="https://github.com/user-attachments/assets/d0394fa0-7d57-4aaa-a26a-6ebd9a8edcf4" />
 
-## 專案說明
 
 名為 `openpcdet_ros2`。使用Nvidia Jetson TX2-NX邊緣運算平台**搭載 Yahboom Rosmaster 控制板的四輪/Ackermann 轉向小車**的 ROS 2 驅動與 PS4 搖桿遙控程式，外加 Gazebo 模擬用的機器人模型（URDF）與感測器（光達、相機），結合Unity開發AR擴增實境。
 以下為使用到的相關套件
@@ -12,6 +11,7 @@
 - Unity-TCP-EndPoint(Jetson平台作為發送端)
 - Unity-TCP-Connector(Personal PC作為接收端)
 
+專案報告:[基於Mono SLAM與AR擴增實境的智能遊戲化駕駛輔助系統.pdf](https://github.com/user-attachments/files/29094736/Mono.SLAM.AR.pdf)
 
 ## 主要功能
 
