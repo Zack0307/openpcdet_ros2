@@ -11,7 +11,7 @@
 - Unity-TCP-EndPoint(Jetson平台作為發送端)
 - Unity-TCP-Connector(Personal PC作為接收端)
 
-專案報告:[基於Mono SLAM與AR擴增實境的智能遊戲化駕駛輔助系統.pdf](https://github.com/user-attachments/files/29094736/Mono.SLAM.AR.pdf)
+專案報告:[基於Mono SLAM與AR擴增實境的智能遊戲化駕駛輔助系統.pdf](https://github.com/user-attachments/files/29094736/Mono.SLAM.AR.pdf)，如果不想下載可以至/doc資料夾直接觀看
 
 ## 主要功能
 
