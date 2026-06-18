@@ -1,5 +1,9 @@
 # openpcdet_ros2
 
+## 專案架構
+
+<img width="770" height="578" alt="image" src="https://github.com/user-attachments/assets/4d86f84d-8ab6-4ce5-9e4a-ab43e00e9711" />
+
 ## 專案說明
 
 名為 `openpcdet_ros2`。使用Nvidia Jetson TX2-NX邊緣運算平台**搭載 Yahboom Rosmaster 控制板的四輪/Ackermann 轉向小車**的 ROS 2 驅動與 PS4 搖桿遙控程式，外加 Gazebo 模擬用的機器人模型（URDF）與感測器（光達、相機），結合Unity開發AR擴增實境。
